@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,9 +15,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.entities.Department;
+import model.services.DepartmentService;
 
 public class DepartmentListController implements Initializable{
 
+	
+	private DepartmentService service;//Não possu instanciar aqui, seria um acoplamento forte
+	
 	@FXML
 	private TableView<Department> tableViewDepartment;
 	
@@ -27,9 +34,16 @@ public class DepartmentListController implements Initializable{
 	@FXML
 	private Button btNew;
 	
+	private ObservableList<Department> obsList;
+	
+	
 	@FXML
 	public void onBtAction() {
 		System.out.println("onBtNewAction");
+	}
+	
+	public void setDepartmentService(DepartmentService service) {
+		this.service = service;
 	}
 	
 	@Override
@@ -44,5 +58,12 @@ public class DepartmentListController implements Initializable{
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewDepartment.prefHeightProperty().bind(stage.heightProperty());
 	}
-
+	public void updateTableView() {
+		if(service == null) {
+			throw new IllegalStateException("Service was null!");
+		}
+		List<Department> list = service.findAll();
+		obsList = FXCollections.observableArrayList(list); //Instancia o obsList com os dados da list
+		tableViewDepartment.setItems(obsList);
+	}
 }
