@@ -29,6 +29,14 @@ public class Utils {//GetSource é do tipo Objetic, muito genérico
 		}
 	}
 	
+	public static Double tryParseToDouble(String str) {
+		try {
+			return Double.parseDouble(str);
+		}catch(NumberFormatException e) {
+			return null;
+		}
+	}
+	
 	public static <T> void formatTableColumnDate(TableColumn<T, Date> tableColumn, String format) { 
 		 tableColumn.setCellFactory(column -> { 
 		  TableCell<T, Date> cell = new TableCell<T, Date>() { 
